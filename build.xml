@@ -91,6 +91,15 @@
 	<target name="distribute"
 	        description=" This target compiles, tests and packs the whole magellan application."
 	        depends="prepare_build, run_tests">
+            <copy todir="${release}/" overwrite="true">
+			<fileset dir="${basedir}">
+				<include name="CHANGELOG.txt" />
+				<include name="COPYING.txt" />
+				<include name="LICENSE.txt" />
+				<include name="README.md" />
+				<include name="RELEASENOTES.txt" />
+			</fileset>
+            </copy>
             <touch file="moooooo_release.v${VERSION.FULL}" />
 	</target>
 
