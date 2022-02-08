@@ -100,7 +100,7 @@
 				<include name="RELEASENOTES.txt" />
 			</fileset>
             </copy>
-            <touch file="moooooo_release.v${VERSION.FULL}" />
+            <echo file="moooooo_release.v${VERSION.FULL}" >This is our release.</echo>
 	</target>
 
 </project>
