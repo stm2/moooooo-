@@ -1,0 +1,97 @@
+<project name="m"
+         default="distribute"
+         xmlns:if="ant:if"
+         xmlns:unless="ant:unless">
+	<description>
+    This is the ANT compile script for magellan. This script helps you
+    to compile a distributable version of magellan.
+
+    Please call one of the following public targets:
+      - distribute
+      - print_version
+      - run_tests
+    </description>
+
+	<property environment="env" />
+
+	<property name="VERSION.MAJOR" value="1" />
+	<property name="VERSION.MINOR" value="1" />
+	<property name="VERSION.SUB" value="0" />
+	<!-- possible values include stable, rc, and betaX -->
+	<property name="VERSION.POST" value=".rc" />
+
+	<property name="VERSION.POINTED"
+	          value="${VERSION.MAJOR}.${VERSION.MINOR}.${VERSION.SUB}" />
+
+	<!-- Some properties -->
+	<property name="bin" location="${basedir}/bin" />
+	<property name="release" location="${basedir}/release" />
+	<property name="etc" location="${basedir}/etc" />
+
+	<!-- Compile Settings -->
+	<property name="debug" value="on" />
+	<property name="optimize" value="off" />
+
+	<!-- -release includes -source -target -bootclasspath -->
+	<property name="compile.release" value="11" />
+	<property name="compile.encoding" value="ISO-8859-1" />
+
+
+	<target name="update_version">
+		<property file=".build.number" />
+		<property name="VERSION.FULL"
+		          value="${VERSION.POINTED}-${build.number}${VERSION.POST}" />
+		<property name="VERSION.COMPAT"
+		          value="${VERSION.POINTED} (build ${build.number})" />
+
+		<copy file="${etc}/VERSION.template"
+		      tofile="${release}/etc/VERSION"
+		      overwrite="yes">
+			<filterset>
+				<filter token="VERSION" value="${VERSION.COMPAT}" />
+				<filter token="SEMANTIC_VERSION" value="${VERSION.FULL}" />
+			</filterset>
+		</copy>
+		<copy file="${release}/etc/VERSION"
+		      tofile="${basedir}/VERSION"
+		      overwrite="yes" />
+	</target>
+
+	<target name="print_version" depends="update_version">
+		<echo message="${VERSION.FULL}" />
+	</target>
+
+	<!-- *************************************************************** -->
+	<!-- *                                                             * -->
+	<!-- *  This target runs all the unit tests                        * -->
+	<!-- *                                                             * -->
+	<!-- *************************************************************** -->
+	<target name="run_tests"
+	        description="This target runs the unit tests."
+	        unless="${quick_mode}">
+
+		<echo message="Running all unit tests" />
+        <touch mkdirs="Yes" file="test/junit/TEST-1" />
+	</target>
+
+	<target name="increase_build_number">
+		<buildnumber file=".build.number" />
+		<echo message="increased build number to ${build.number}" />
+	</target>
+
+	<target name="prepare_build"
+	        depends="increase_build_number, update_version">
+	</target>
+
+	<!-- *************************************************************** -->
+	<!-- *                                                             * -->
+	<!-- *  This target compiles and packs the whole magellan app.     * -->
+	<!-- *                                                             * -->
+	<!-- *************************************************************** -->
+	<target name="distribute"
+	        description=" This target compiles, tests and packs the whole magellan application."
+	        depends="prepare_build, run_tests">
+            <touch file="moooooo_release.v${VERSION.FULL}" />
+	</target>
+
+</project>
