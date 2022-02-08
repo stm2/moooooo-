@@ -106,7 +106,7 @@ jobs:
         git remote -v
         git fetch --tags
         gh release list
-        gh release delete ${TAG} -y || echo "cont"
+        gh release delete ${TAG} -y || echo "continuing ..."
         git tag -f "${TAG}"
         REMOTE="https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
         git push --force "$REMOTE" "${TAG}"
