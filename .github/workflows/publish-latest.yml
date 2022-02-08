@@ -101,6 +101,7 @@ jobs:
         git config user.name "$GITHUB_ACTOR"
         git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
         git remote -v
+        hub release delete ${{ steps.get-version.outputs.TAG }}
         git tag -f "${{ steps.get-version.outputs.TAG }}"
         REMOTE="https://$GITHUB_ACTOR:${{ secrets.GITHUB_TOKEN }}@github.com/$GITHUB_REPOSITORY.git"
         git push --force "$REMOTE" "${{ steps.get-version.outputs.TAG }}"
